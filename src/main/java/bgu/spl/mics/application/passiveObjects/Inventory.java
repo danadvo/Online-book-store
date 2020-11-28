@@ -64,10 +64,12 @@ public class Inventory implements Serializable {
 	public OrderResult take (String book) {
 		for (int i=0; i<books.length; i++){
 			if (books[i].getBookTitle().equals(book)){
-				int amount = books[i].getAmountInInventory();
-				if (amount > 0) {
-					books[i].setAmountInInventory(amount - 1);
-					return OrderResult.SUCCESSFULLY_TAKEN;
+				synchronized(books[i]){
+					int amount = books[i].getAmountInInventory();
+					if (amount > 0) {
+						books[i].setAmountInInventory(amount - 1);
+						return OrderResult.SUCCESSFULLY_TAKEN;
+					}
 				}
 			}
 		}
